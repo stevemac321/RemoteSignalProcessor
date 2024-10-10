@@ -11,6 +11,7 @@
 #include <pcap.h>
 #include <arpa/inet.h>
 #include <netinet/ether.h>
+#include "graph.h"
 
 #define COLS 251 // adjust to how many columns you set your terminal to.
 #define ROWS 65  // ditto for rows
@@ -34,6 +35,9 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char
 void get_packet() ;
 void packet_to_float(const u_char *packet);
 void save_packet(const u_char *packet);
+
+// consolidation function for pressing '1'
+void display_all_voltage_data();
 
 void display_voltage_floats(WINDOW * win);
 void display_voltage_packet(WINDOW * win);

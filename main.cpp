@@ -25,11 +25,7 @@ int main() {
     // Draw function keys at the bottom
     draw_function_keys(statuswin);
     setup_main_view(windows);
-    
-    std::vector<std::complex<float>> v(TOTAL_FLOATS);
-    std::priority_queue<float, std::vector<float>, std::less<float>> pq;
-    std::vector<float> magnitudes;
-
+   
     int ch;
     while ((ch = getch()) != '0') {
       
@@ -38,18 +34,7 @@ int main() {
                     // Handle System View logic (e.g., refreshing with new data)
                     mvwprintw(statuswin, 0, 200, "System View");
                     wrefresh(statuswin);
-                     // get packets, convert to float
-                    packet_captured = false;
-                    get_packet();
-                    display_voltage_floats(windows[1]);
-                    display_voltage_packet(windows[0]);
-                    v = prepare_complex_fft(float_array, TOTAL_FLOATS);
-                    normalize_signal(v);
-                    FFT(v, TOTAL_FLOATS);
-                    display_voltage_fft(windows[2], v);
-                    magnitudes = convert_to_magnitudes(v);
-                    pq = pqueue_from_magnitudes(magnitudes, magnitudes.size());
-                    display_voltage_magnitude_pqueue(windows[3], pq);
+                    display_all_voltage_data();
                     break;
                 case '2':
                     // Handle Math View logic

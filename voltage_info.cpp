@@ -59,3 +59,21 @@ void display_voltage_magnitude_pqueue(WINDOW *win,
     }
      wrefresh(win);
 }
+void display_all_voltage_data()
+{
+    std::vector<std::complex<float>> v(TOTAL_FLOATS);
+    std::priority_queue<float, std::vector<float>, std::less<float>> pq;
+    std::vector<float> magnitudes;
+
+    packet_captured = false;
+    get_packet();
+    display_voltage_floats(windows[1]);
+    display_voltage_packet(windows[0]);
+    v = prepare_complex_fft(float_array, TOTAL_FLOATS);
+    normalize_signal(v);
+    FFT(v, TOTAL_FLOATS);
+    display_voltage_fft(windows[2], v);
+    magnitudes = convert_to_magnitudes(v);
+    pq = pqueue_from_magnitudes(magnitudes, magnitudes.size());
+    display_voltage_magnitude_pqueue(windows[3], pq);
+}
