@@ -1,76 +1,92 @@
-
 # Voltage Analyzer
 
-This repository hosts a terminal-based application built using `ncurses` that processes and analyzes voltage samples transmitted over Ethernet. The application is designed to work in conjunction with another embedded Ethernet project, which collects voltage samples from a microcontroller and transmits them as Ethernet packets.
+This repository hosts a terminal-based application built using `ncurses` that processes and analyzes voltage samples transmitted over Ethernet. The application reads real-time Ethernet packets from a microcontroller, parses the data, and then applies various analyses.
 
 ## Project Overview
 
-The `Voltage Analyzer` application is not designed for real-time monitoring. Instead, it works by importing pre-captured Ethernet packets using Wireshark, processing the voltage samples, and then applying various analyses such as:
+The Voltage Analyzer is designed for real-time packet capturing and data analysis. It works by interfacing directly with the microcontroller over Ethernet, capturing voltage sample packets in real time, and displaying the data in a terminal-based UI.
 
-- **Fast Fourier Transform (FFT)**: For frequency domain analysis.
-- **Magnitude Calculations**: To find peak values and visualize the signal.
-- **Statistical Testing**: Including chi-square tests to verify randomness or uniformity of signal values.
-- **Graphing and Visualization**: Utilizing `ncurses` for displaying graphs and other data visualizations in the terminal.
+The primary features of the project include:
 
-This project is ideal for offline data processing and analysis, making it a great tool for detailed inspection of voltage behavior from the microcontroller.
+1. **Real-Time Packet Reading**: Captures Ethernet packets directly from the microcontroller using raw socket programming.
+2. **Data Analysis**: Processes and visualizes voltage data, with planned integration of advanced numerical methods using `std::numerics`.
+3. **Interactive User Interface**: Utilizes `ncurses` for displaying graphs and data visualizations, allowing for an intuitive way to observe voltage behavior in real time.
 
-## Features
+### Key Features
 
-- **Ethernet Packet Parsing**: Reads voltage sample packets captured in Wireshark.
-TODO - import the following from CMSIS/DSP Project
-- ** - Replace Wireshark capture with real-time socket app
-- **Data Analysis**: Includes FFT, magnitude calculations, and potentially other numerical methods using `std::numerics`.
-- **Graphical Display**: Visualizes data and results in a terminal-based UI using `ncurses`.
-- **Statistical Testing**: Plan to include chi-square tests and other statistical metrics to verify signal quality and randomness.
+- **Ethernet Packet Parsing**: Reads and parses voltage samples from real-time Ethernet packets without the need for external packet capture tools.
+- **Data Analysis**: Converts packet data to voltage values and performs calculations such as average, maximum, and minimum readings.
+- **Graphical Display**: Visualizes real-time data in a terminal-based UI using `ncurses`, with color-coded output for easier analysis.
+- **Interactive Key Bindings**: Allows user interaction to capture new packets, reset data, or switch between views.
+  
+### Usage Instructions
 
-## Usage
+1. **Install Dependencies**:
 
-### 1. **Capture Ethernet Packets with Wireshark**:  
-   Use Wireshark to capture packets sent from the microcontroller. Export the packets as C arrays for integration with this application.
-   
-### 2. **Compile the Application**:  
-   Use the provided `Makefile` to build the application. Make sure `ncurses` is installed on your system:
+   Make sure you have the following libraries installed:
+
+   ```bash
+   sudo apt-get update
+   sudo apt-get install libncurses5-dev libpcap-dev
+   sudo apt-get install gdb-multiarch openocd stlink-tools
+   ```
+
+2. **Clone the Repository**:
+
+   Clone the project using the following command:
+
+   ```bash
+   git clone https://github.com/stevemac321/voltage-analyzer.git
+   cd voltage-analyzer
+   ```
+
+3. **Build the Application**:
+
+   Use the provided Makefile to build the application. Make sure to have `ncurses` and `libpcap` installed on your system:
+
    ```bash
    make
    ```
-   
+
    This will generate the `voltage_analyzer` binary in the build directory.
 
-### 3. **Run the Application**:  
-   Execute the binary and provide the C array data as input:
+4. **Run the Application**:
+
+   Execute the binary to start capturing packets and visualizing the data:
+
    ```bash
    ./voltage_analyzer
    ```
-   
-### 4. **View Analysis Results**:  
-   The terminal-based UI will display the voltage sample values, any identified signal peaks, FFT results, and other relevant metrics.
 
-## Planned Enhancements
+5. **View Analysis Results**:
 
-- **Real-time Integration**: Adding real-time processing capabilities using Ethernet sniffing libraries.
-- **Graphical User Interface**: Transitioning from `ncurses` to a more advanced graphical toolkit (e.g., GTK or Qt).
-- **Advanced Statistical Testing**: Including more statistical tests to validate signal properties.
-- **Extended Signal Processing**: Implementing additional signal processing techniques like windowing functions, filtering, and spectral analysis.
+   The terminal-based UI will display real-time voltage sample values, and any identified signal anomalies or trends.
 
-## Prerequisites  (I developed this with clang++ on FreeBSD, but it should work on Linux too).
+### Planned Enhancements
 
-- **Development Board**: Nucleo-H723ZG or compatible STM32 microcontroller.
-- **Wireshark**: To capture and export Ethernet packets.
-- **NCurses**: Terminal-based UI library for graphing and visualization.
-- **C++ Standard Library**: For numerical analysis and data handling.
+- **Real-time Integration**: Continuous improvement of the real-time packet handling and Ethernet sniffing for more reliable data capture.
+- **Threading for Performance**: Implement multi-threaded packet handling for better performance and smoother UI updates.
+- **Advanced Signal Processing**: Integration of Fast Fourier Transform (FFT) and other numerical methods using `std::numerics` for frequency domain analysis.
+- **Comprehensive Statistical Testing**: Implement chi-square and other statistical tests to validate signal properties and randomness.
+- **Enhanced GUI Options**: Explore transitioning to a more advanced graphical toolkit (e.g., GTK or Qt) for enhanced visualization.
 
-## Folder Structure
+### Prerequisites
+
+- Development Board: Nucleo-H723ZG or compatible STM32 microcontroller.
+- Linux Environment: Developed on Ubuntu and FreeBSD but should work on most Linux distributions.
+- `ncurses` Library: For terminal-based UI and visualization.
+- `libpcap` Library: For capturing and parsing Ethernet packets.
+
+### Folder Structure
 
 ```
 ├── src/                   # Source files for parsing, data processing, and visualization
 ├── include/               # Header files for classes and utility functions
-├── data/                  # Sample data files (e.g., C arrays exported from Wireshark)
-├── Makefile               # Makefile for building the project
 ├── build/                 # Directory for build artifacts
-└── README.md              # This readme file with project overview and instructions
+├── Makefile               # Makefile for building the project
+└── README.md              # Project overview and instructions
 ```
 
-## License
+### License
 
-This project is licensed under the GPL 2
-
+This project is licensed under the GPL version 2 (GPLv2).
