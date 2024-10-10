@@ -7,7 +7,7 @@ LDFLAGS = -lncurses  -pthread -lpcap
 TARGET = remote_monitor
 
 # Source files
-SRCS = main.cpp windraw.cpp voltage_info.cpp sock.cpp
+SRCS = main.cpp windraw.cpp voltage_info.cpp sock.cpp fft.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)

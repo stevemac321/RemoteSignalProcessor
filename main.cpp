@@ -4,9 +4,7 @@ WINDOW *windows[num_windows];
 
 int main() {
     
-    const int num_windows = 3;
     WINDOW *mainwin, *statuswin;
-  
 
     // Initialize ncurses
     initscr();
@@ -19,8 +17,8 @@ int main() {
     keypad(stdscr, TRUE);
 
     // Create main display and status windows
-    mainwin = newwin(56, 232, 0, 0);     // Main display window
-    statuswin = newwin(1, 232, 56, 0);   // Status window for function key descriptions
+    mainwin = newwin(ROWS, COLS, 0, 0);     // Main display window
+    statuswin = newwin(1, COLS, ROWS + 2, 0);   // Status window for function key descriptions
 
     // Draw initial main view layout with 6 windows
     setup_main_view(windows);
@@ -28,6 +26,9 @@ int main() {
     draw_function_keys(statuswin);
     setup_main_view(windows);
     
+    std::vector<std::complex<float>> v(TOTAL_FLOATS);
+    std::priority_queue<float, std::vector<float>, std::less<float>> pq;
+    std::vector<float> magnitudes;
 
     int ch;
     while ((ch = getch()) != '0') {
@@ -40,7 +41,15 @@ int main() {
                      // get packets, convert to float
                     packet_captured = false;
                     get_packet();
-                    display_voltage_floats(windows[0]);
+                    display_voltage_floats(windows[1]);
+                    display_voltage_packet(windows[0]);
+                    v = prepare_complex_fft(float_array, TOTAL_FLOATS);
+                    normalize_signal(v);
+                    FFT(v, TOTAL_FLOATS);
+                    display_voltage_fft(windows[2], v);
+                    magnitudes = convert_to_magnitudes(v);
+                    pq = pqueue_from_magnitudes(magnitudes, magnitudes.size());
+                    display_voltage_magnitude_pqueue(windows[3], pq);
                     break;
                 case '2':
                     // Handle Math View logic
@@ -50,7 +59,7 @@ int main() {
                     break;
                 case '3':
                     // Handle Math View logic
-                    mvwprintw(statuswin, 0, 200, "Memory Usage");
+                    mvwprintw(statuswin, 0, 200, "Future Usage");
                     wrefresh(statuswin);
                     //todo
                     break;

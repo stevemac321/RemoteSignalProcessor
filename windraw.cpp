@@ -15,24 +15,37 @@ void draw_function_keys(WINDOW *win) {
     wattroff(win, COLOR_PAIR(1)); // Turn off color pair 1
     wrefresh(win);
 }
-// Function to set up the main view with three windows
+// Function to set up the windows based on the given layout.
 void setup_main_view(WINDOW *windows[]) {
-    const char *titles[] = {
-        "(1.) CPU Usage", "(2.) Memory Usage", "(3.) Network Activity"
-    };
+    int first_window_height = ROWS / 4;  // First window takes 25% of the total height
+    int bottom_height = ROWS - first_window_height;  // Remaining height for the other three windows
 
-    int height = 57 - 2;  // Full height of the screen minus borders
-    int width = 232 / 3;  // One-third of the screen width
+    // Dimensions for the three bottom windows
+    int window_1_width = COLS / 4;   // 25% of the width
+    int window_2_width = COLS / 4;   // 25% of the width
+    int window_3_width = COLS / 2;   // 50% of the width
 
-    for (int i = 0; i < 3; ++i) {
-        int starty = 0;                // Y position is fixed at top
-        int startx = i * width;        // Calculate the starting x position for each column
+    // Window 0: Top window spanning the full width
+    windows[0] = newwin(first_window_height, COLS, 0, 0);
+    box(windows[0], 0, 0);  // Draw box border
+    mvwprintw(windows[0], 0, 1, "(0) Packet Display and Sine Wave");
+    wrefresh(windows[0]);
 
-        windows[i] = newwin(height, width, starty, startx);
-        wattron(windows[i], COLOR_PAIR(1));  // Turn on color pair 1
-        draw_perimeter(windows[i]);          // Draw border around each window
-        mvwprintw(windows[i], 0, 1, "%s", titles[i]);  // Set window title
-        wattroff(windows[i], COLOR_PAIR(1)); // Turn off color pair 1
-        wrefresh(windows[i]);                // Refresh the window to display title
-    }
+    // Window 1: Bottom-left window spanning 75% of the height and 25% of the width
+    windows[1] = newwin(bottom_height, window_1_width, first_window_height, 0);
+    box(windows[1], 0, 0);  // Draw box border
+    mvwprintw(windows[1], 0, 1, "(1) Voltage Data");
+    wrefresh(windows[1]);
+
+    // Window 2: Bottom-middle window spanning 75% of the height and 25% of the width
+    windows[2] = newwin(bottom_height, window_2_width, first_window_height, window_1_width);
+    box(windows[2], 0, 0);  // Draw box border
+    mvwprintw(windows[2], 0, 1, "(2) Fast Fourier Transfer Results");
+    wrefresh(windows[2]);
+
+    // Window 3: Bottom-right window spanning 75% of the height and 50% of the width
+    windows[3] = newwin(bottom_height, window_3_width, first_window_height, window_1_width + window_2_width);
+    box(windows[3], 0, 0);  // Draw box border
+    mvwprintw(windows[3], 0, 1, "(3) Right Vertical Window");
+    wrefresh(windows[3]);
 }

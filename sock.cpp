@@ -1,17 +1,19 @@
-#include <pcap.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <netinet/ether.h>
+
 #include "common.h"
+// Conversion factor for 12-bit ADC with 3.3V reference voltage
+#define ADC_REF_VOLTAGE 3.3f
+#define ADC_RESOLUTION 4096.0f
 
 // MAC address of the microcontroller (same format as Wireshark)
 #define TARGET_MAC "00:80:e1:00:00:00"
- bool packet_captured = false;
+
+bool packet_captured = false;
+uint8_t packet_array[PACKET_LENGTH];
 
 // Function to handle each captured packet
-void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet) {
+void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet) 
+{
+    (void)user;
     struct ether_header *eth_header;
 
     // Parse Ethernet header
@@ -30,18 +32,15 @@ void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char
 
     // Check if the packet source or destination MAC matches the target MAC address
     if (strcmp(src_mac, TARGET_MAC) == 0 || strcmp(dst_mac, TARGET_MAC) == 0) {
-        int col = TOTAL_FLOATS + 3;
-        mvwprintw(windows[0], col++, 1, "Packet captured:\n");
-        mvwprintw(windows[0], col++, 1,"Source MAC: %s\n", src_mac);
-        mvwprintw(windows[0], col++, 1,"Destination MAC: %s\n", dst_mac);
-        mvwprintw(windows[0], col++, 1,"Packet length: %d bytes\n", header->len);
-        mvwprintw(windows[0], col++, 1, "Timestamp: %ld.%06ld\n", header->ts.tv_sec, header->ts.tv_usec);
-        mvwprintw(windows[0], col++, 1, "----\n");
+        int row = 5;
+        mvwprintw(windows[0], row++, 1,"Source MAC: %s\n", src_mac);
+        mvwprintw(windows[0], row++, 1,"Destination MAC: %s\n", dst_mac);
+        mvwprintw(windows[0], row++, 1,"Packet length: %d bytes\n", header->len);
+        mvwprintw(windows[0], row++, 1, "Timestamp: %ld.%06ld\n", header->ts.tv_sec, header->ts.tv_usec);
         wrefresh(windows[0]);   
     }
-
+    save_packet(packet);
     packet_to_float(packet);
-    
 }
 
 // Function to start packet capture
@@ -54,19 +53,21 @@ void get_packet() {
     // Define filter to match packets involving the microcontroller MAC address
     snprintf(filter_exp, sizeof(filter_exp), "ether host %s", TARGET_MAC);
 
-    // Open the default network device for packet capture
-    char *dev = pcap_lookupdev(errbuf);
-    if (dev == NULL) {
-        fprintf(stderr, "Could not find default device: %s\n", errbuf);
+    struct pcap_if *alldevs, *dev;
+    if (pcap_findalldevs(&alldevs, errbuf) == -1) {
+        fprintf(stderr, "Could not find devices: %s\n", errbuf);
         return;
     }
-
-    //printf("Using device: %s\n", dev);
+    if (alldevs == NULL) {
+        fprintf(stderr, "No devices found.\n");
+        return;
+    }
+    dev = alldevs;
 
     // Open device for live capture
-    handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
+    handle = pcap_open_live(dev->name, BUFSIZ, 1, 1000, errbuf);
     if (handle == NULL) {
-        fprintf(stderr, "Could not open device %s: %s\n", dev, errbuf);
+        fprintf(stderr, "Could not open device %s: %s\n", dev->name, errbuf);
         return;
     }
 
@@ -83,10 +84,8 @@ void get_packet() {
     // Capture packets using pcap_loop
      // The '1' captures only one packet for demonstration purposes
     
-     int count = 0;
      while (!packet_captured) {
         int ret = pcap_loop(handle, 1, packet_handler, NULL);
-        count++;
         if (ret < 0) {
             // If ret is negative, it indicates an error or the loop was explicitly broken
             fprintf(stderr, "Error capturing packet: %s\n", pcap_geterr(handle));
@@ -98,19 +97,53 @@ void get_packet() {
     // Close the capture device and free resources
     pcap_freecode(&fp);
     pcap_close(handle);
+    pcap_freealldevs(alldevs);
 }
+/*
+Conversion Formula:
 
-void packet_to_float(const u_char *packet) {
+The raw ADC values are converted to voltage using the formula:
+Voltage = (Raw ADC Value / 4096) × 3.3
+This converts the 0-4095 ADC range to a corresponding 0-3.3V range.
+Additional Conversion Step:
+*/
+void packet_to_float(const u_char *packet) 
+{
     if(packet == NULL) {
         printf("error, packet is NULL\n");
         return;
     }
     float *dest_ptr = float_array;  // Pointer to float array's first element
-    const uint8_t *src_ptr = packet; // Pointer to pkt92 array's first element
+    const uint8_t *src_ptr = packet; // Pointer to packet array's first element
 
     // Iterate over the total number of floats
     for (int i = 0; i < TOTAL_FLOATS; i++) {
-        // Copy 4 bytes from pkt92 (source) to float_array (destination)
+        // Copy 4 bytes from packet (source) to float_array (destination)
+        memcpy(dest_ptr, src_ptr, sizeof(float));
+
+        // Convert the raw ADC value to voltage:
+        *dest_ptr = (*dest_ptr / ADC_RESOLUTION) * ADC_REF_VOLTAGE;
+
+        // Move to the next float in destination
+        dest_ptr++;
+
+        // Move 4 bytes ahead in source
+        src_ptr += sizeof(float);
+    }
+}
+#if 0
+void  packet_to_float(const u_char *packet) 
+{
+    if(packet == NULL) {
+        printf("error, packet is NULL\n");
+        return;
+    }
+    float *dest_ptr = float_array;  // Pointer to float array's first element
+    const uint8_t *src_ptr = packet; // Pointer to packet array's first element
+
+    // Iterate over the total number of floats
+    for (int i = 0; i < TOTAL_FLOATS; i++) {
+        // Copy 4 bytes from packet (source) to float_array (destination)
         memcpy(dest_ptr, src_ptr, sizeof(float));
 
         // Move to the next float in destination
@@ -118,5 +151,12 @@ void packet_to_float(const u_char *packet) {
 
         // Move 4 bytes ahead in source
         src_ptr += sizeof(float);
+    }
+}
+#endif
+void save_packet(const u_char *packet) 
+{
+    for(int i=0; i < PACKET_LENGTH; i++) {
+        packet_array[i] = packet[i];
     }
 }
