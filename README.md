@@ -77,7 +77,7 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
 ### Prerequisites
 
 - **Hardware**: Nucleo-H723ZG or compatible STM32 microcontroller.
-- **Environment**: Developed on Ubuntu and FreeBSD but should work on most Linux distributions.
+- **Environment**: Developed on Ubuntu but should work on most Linux distributions.
 - **Libraries**: `ncurses` for terminal-based UI and `libpcap` for Ethernet packet capture.
 
 ### Folder Structure
