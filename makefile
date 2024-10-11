@@ -1,16 +1,20 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++20 -Wall -Wextra -g
-LDFLAGS = -lncurses  -pthread -lpcap
+CXXFLAGS = -std=c++20 -Wall -Wextra -g -Iinc  # Add the include directory to the flags
+LDFLAGS = -lncurses -pthread -lpcap
 
 # Target executable
 TARGET = remote_monitor
 
-# Source files
-SRCS = main.cpp windraw.cpp voltage_info.cpp sock.cpp fft.cpp
+# Source and header directories
+SRC_DIR = src
+INC_DIR = inc
 
-# Object files
-OBJS = $(SRCS:.cpp=.o)
+# Source files (all .cpp files inside src/)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+
+# Object files (replace src/ with the root directory for object files)
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=%.o)
 
 # Build target
 all: $(TARGET)
@@ -20,7 +24,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
 
 # Compile source files into object files
-%.o: %.cpp
+%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up build artifacts
