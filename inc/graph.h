@@ -1,6 +1,10 @@
-#ifndef GRAPH_HPP
-#define GRAPH_HPP
-#include "common.h"
+#ifndef GRAPH_H
+#define GRAPH_H
+
+#include <ncurses.h>
+#include <vector>
+#include <complex>
+#include <array>
 
 // Define the Color enumeration used in graph traversal
 enum Color : uint32_t {

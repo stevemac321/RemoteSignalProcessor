@@ -1,5 +1,6 @@
 
 #include "common.h"
+
 // Conversion factor for 12-bit ADC with 3.3V reference voltage
 #define ADC_REF_VOLTAGE 3.3f
 #define ADC_RESOLUTION 4096.0f
