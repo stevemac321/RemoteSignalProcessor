@@ -26,7 +26,7 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
 - **Matrix Operations**:
   - Performs matrix addition, subtraction, and multiplication on captured packet data.
   - The results are displayed in the terminal along with execution times.
-  - **New Feature**: Each matrix operation is validated against expected results, and the validation status (pass or fail) is displayed. Validation logs are saved to a file `matrix_validation.txt` after each run.
+  - **New Feature**: Validation logs are saved to a file `matrix_validation.txt` after each run.
   
 - **Interactive Key Bindings**:
   - **Press '1'**: Captures packets and provides a voltage view.

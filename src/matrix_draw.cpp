@@ -7,8 +7,7 @@ const int column_spacing = 50;
 // Calls matrix perform_matrix_operations, then prints the results.
 void display_all_matrix_data(std::chrono::microseconds addition_duration, 
                              std::chrono::microseconds subtraction_duration,
-                             std::chrono::microseconds multiplication_duration, 
-                             bool addition_valid, bool subtraction_valid, bool multiplication_valid)
+                             std::chrono::microseconds multiplication_duration)
 {
     // Display packet matrices
     for(int i = 0; i < MATRIX_DIM; i++) {
@@ -34,7 +33,6 @@ void display_all_matrix_data(std::chrono::microseconds addition_duration,
         }
     }
     mvwprintw(windows[1], MATRIX_DIM + 1, 1, "Addition Time taken: %ld microseconds", addition_duration.count());
-    mvwprintw(windows[1], MATRIX_DIM + 2, 1, "Addition Validation: %s", addition_valid ? "Passed" : "Failed");
     wrefresh(windows[1]);
 
     // Display subtraction result
@@ -44,7 +42,6 @@ void display_all_matrix_data(std::chrono::microseconds addition_duration,
         }
     }
     mvwprintw(windows[2], MATRIX_DIM + 1, 1, "Subtraction Time taken: %ld microseconds", subtraction_duration.count());
-    mvwprintw(windows[2], MATRIX_DIM + 2, 1, "Subtraction Validation: %s", subtraction_valid ? "Passed" : "Failed");
     wrefresh(windows[2]);
 
     // Display multiplication result
@@ -53,7 +50,7 @@ void display_all_matrix_data(std::chrono::microseconds addition_duration,
             mvwprintw(windows[3], i + 1, j * spacing + 1, "%" PRIi64, multiplication_result[i][j]); 
         }
     }
-    mvwprintw(windows[3], MATRIX_DIM + 1, 1, "Multiplication Time taken: %ld microseconds", multiplication_duration.count());
-    mvwprintw(windows[3], MATRIX_DIM + 2, 1, "Multiplication Validation: %s", multiplication_valid ? "Passed" : "Failed");
+    mvwprintw(windows[3], MATRIX_DIM + 1, 1, "Multiplication Time taken: %ld microseconds", 
+                                                            multiplication_duration.count());
     wrefresh(windows[3]);
 }

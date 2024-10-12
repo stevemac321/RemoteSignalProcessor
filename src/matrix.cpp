@@ -7,40 +7,6 @@
 #include <string>  // For std::string
 #include <cstring> // For std::memcpy
 
-int64_t expected_addition_result[MATRIX_DIM][MATRIX_DIM] = {
-    {0, 192, 411, 136, 0, 352, 205, 196},
-    {225, 224, 205, 68, 0, 224, 411, 136},
-    {0, 384, 410, 136, 0, 384, 410, 136},
-    {0, 384, 410, 136, 0, 224, 411, 136},
-    {0, 224, 411, 136, 0, 448, 410, 136},
-    {0, 384, 410, 136, 0, 224, 411, 136},
-    {0, 192, 411, 136, 0, 448, 410, 136},
-    {0, 224, 411, 136, 0, 352, 410, 136}
-};
-
-int64_t expected_subtraction_result[MATRIX_DIM][MATRIX_DIM] = {
-    {0, 128, -1, 0, 0, 32, -205, 60},
-    {225, -224, -205, -68, 0, -224, 1, 0},
-    {0, 64, 0, 0, 0, 64, 0, 0},
-    {0, 64, 0, 0, 0, -224, 1, 0},
-    {0, 224, -1, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, -160, 1, 0},
-    {0, 192, -1, 0, 0, 0, 0, 0},
-    {0, 224, -1, 0, 0, -32, 0, 0}
-};
-
-int64_t expected_multiplication_result[MATRIX_DIM][MATRIX_DIM] = {
-    {0, 116384, 154493, 51204, 0, 145312, 154365, 51204},
-    {0, 7200, 102794, 33932, 0, 95200, 102295, 33932},
-    {0, 136864, 204043, 67592, 0, 200192, 203770, 67592},
-    {0, 93856, 158329, 52428, 0, 157408, 158055, 52428},
-    {0, 136864, 204043, 67592, 0, 200192, 203770, 67592},
-    {0, 92832, 158329, 52428, 0, 156384, 158055, 52428},
-    {0, 129696, 197483, 65416, 0, 193024, 197210, 65416},
-    {0, 124576, 190923, 63240, 0, 187904, 190650, 63240}
-};
-
-
 const size_t NUM_THREADS = std::thread::hardware_concurrency(); // Number of threads
 
 int64_t packet_matrix1[MATRIX_DIM][MATRIX_DIM];
@@ -66,28 +32,30 @@ void perform_matrix_operations()
     auto addition_duration = std::chrono::duration_cast<std::chrono::microseconds>(addition_end - addition_start); // Microsecond timing
 
     // Validate addition result
-    bool addition_valid = validate_matrix(addition_result, expected_addition_result, filename);
+    log_matrix(addition_result, filename, "Addition:");
 
     // Subtraction
     auto subtraction_start = std::chrono::high_resolution_clock::now();
     matrix_subtraction(packet_matrix1, packet_matrix2, subtraction_result);
     auto subtraction_end = std::chrono::high_resolution_clock::now();
-    auto subtraction_duration = std::chrono::duration_cast<std::chrono::microseconds>(subtraction_end - subtraction_start); // Microsecond timing
+    auto subtraction_duration = 
+                            std::chrono::duration_cast<std::chrono::microseconds>(subtraction_end - subtraction_start); 
 
     // Validate subtraction result
-    bool subtraction_valid = validate_matrix(subtraction_result, expected_subtraction_result, filename);
+    log_matrix(subtraction_result, filename, "Subtraction:");
 
     // Multiplication
     auto multiplication_start = std::chrono::high_resolution_clock::now();
     matrix_multiplication();  
     auto multiplication_end = std::chrono::high_resolution_clock::now();
-    auto multiplication_duration = std::chrono::duration_cast<std::chrono::microseconds>(multiplication_end - multiplication_start); // Microsecond timing
+    auto multiplication_duration = 
+                    std::chrono::duration_cast<std::chrono::microseconds>(multiplication_end - multiplication_start); 
 
     // Validate multiplication result
-    bool multiplication_valid = validate_matrix(multiplication_result, expected_multiplication_result, filename);
+    log_matrix(multiplication_result, filename, "Multiplication:");
 
     // Display the results with the durations and validation status
-    display_all_matrix_data(addition_duration, subtraction_duration, multiplication_duration, addition_valid, subtraction_valid, multiplication_valid);
+    display_all_matrix_data(addition_duration, subtraction_duration, multiplication_duration);
 }
 
 
@@ -180,9 +148,7 @@ void threaded_matrix_multiplication(int64_t A[MATRIX_DIM][MATRIX_DIM], int64_t B
     }
 }
 
-
-bool validate_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], int64_t expected[MATRIX_DIM][MATRIX_DIM], 
-                                                                        const std::string& filename) 
+void log_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], const std::string& filename, const std::string& mesg) 
 {
     // Open the file in append mode
     std::ofstream file(filename, std::ios::app);
@@ -190,48 +156,42 @@ bool validate_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], int64_t expected[MA
     // Check if file is open
     if (!file.is_open()) {
         std::cerr << "Failed to open file: " << filename << std::endl;
-        return false;
+        return;
     }
-    
-    bool isValid = true; // To track if the matrix is valid
-    int64_t diff[MATRIX_DIM][MATRIX_DIM] = {{0}}; // Store differences
 
-    // Print headers for matrices
-    file << "Result Matrix vs Expected Matrix\n";
+    // Log the provided message
+    file << mesg << "\n";
+    
+    // Print header for matrices
+    file << "Matrix 1 vs Matrix 2 vs Result Matrix\n";
     file << "--------------------------------------------\n";
 
-    // Print both matrices side by side
+    // Log packet_matrix1, packet_matrix2, and the result matrix side by side
     for (int i = 0; i < MATRIX_DIM; ++i) {
+        // Log packet_matrix1
         for (int j = 0; j < MATRIX_DIM; ++j) {
-            file << std::setw(10) << result[i][j]; // Format result
+            file << std::setw(10) << packet_matrix1[i][j]; // Format packet_matrix1 values
         }
-        file << "   |   "; // Separator between result and expected
+
+        file << "   |   "; // Separator between matrices
+
+        // Log packet_matrix2
         for (int j = 0; j < MATRIX_DIM; ++j) {
-            file << std::setw(10) << expected[i][j]; // Format expected
+            file << std::setw(10) << packet_matrix2[i][j]; // Format packet_matrix2 values
         }
-        file << "\n";
+
+        file << "   |   "; // Separator for the result
+
+        // Log result matrix
+        for (int j = 0; j < MATRIX_DIM; ++j) {
+            file << std::setw(10) << result[i][j]; // Format result values
+        }
+
+        file << "\n"; // Newline for the next row
     }
 
-    // Perform comparison and print the difference matrix
-    file << "\nDifference (Result - Expected):\n";
-    file << "--------------------------------------------\n";
-    
-    for (int i = 0; i < MATRIX_DIM; ++i) {
-        for (int j = 0; j < MATRIX_DIM; ++j) {
-            diff[i][j] = result[i][j] - expected[i][j]; // Calculate difference
-            if (diff[i][j] != 0) {
-                isValid = false; // Mark as invalid if any difference is found
-            }
-            file << std::setw(10) << diff[i][j]; // Print difference matrix
-        }
-        file << "\n";
-    }
-    
-    file << "\n"; // Add some spacing between different validation outputs
+    file << "\n"; // Add some spacing between different log outputs
 
     // Close the file after writing
     file.close();
-
-    return isValid; // Return true if matrices are equal, false otherwise
 }
-

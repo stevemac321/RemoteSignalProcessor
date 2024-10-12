@@ -92,13 +92,11 @@ void multiply_matrices(int64_t A[MATRIX_DIM][MATRIX_DIM], int64_t B[MATRIX_DIM][
 void threaded_matrix_multiplication(int64_t A[MATRIX_DIM][MATRIX_DIM], int64_t B[MATRIX_DIM][MATRIX_DIM], 
                                     int64_t C[MATRIX_DIM][MATRIX_DIM]);
 
-bool validate_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], int64_t expected[MATRIX_DIM][MATRIX_DIM], 
-                                                                        const std::string& filename);
+void log_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], const std::string& filename, const std::string& mesg);
 
 // for matrix
 // calls matrix perform_matrix_operations, then prints the results.
 void display_all_matrix_data(std::chrono::microseconds addition_duration, 
                              std::chrono::microseconds subtraction_duration,
-                             std::chrono::microseconds multiplication_duration, 
-                             bool addition_valid, bool subtraction_valid, bool multiplication_valid);
+                             std::chrono::microseconds multiplication_duration);
 #endif // COMMON_H
