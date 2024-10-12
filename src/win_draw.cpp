@@ -2,7 +2,6 @@
 
 void initialize_screen()
 {
-    
     initscr();
     clear();  // Clear the screen
     refresh(); // Refresh the screen to apply clearing

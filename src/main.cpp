@@ -16,7 +16,6 @@ int main() {
     setup_main_view(windows);
     // Draw function keys at the bottom
     draw_function_keys(statuswin);
-    setup_main_view(windows);
 
     int ch;
     while ((ch = getch()) != '0') {
@@ -32,6 +31,8 @@ int main() {
                     // Handle Math View logic
                     mvwprintw(statuswin, 0, 200, "Math Usage");
                     wrefresh(statuswin);
+                    setup_main_view(windows);
+                    perform_matrix_operations();
                     // todo
                     break;
                 case '3':
