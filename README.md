@@ -23,8 +23,10 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
     \text{Magnitude} = \sqrt{(\text{real}^2 + \text{imag}^2)}
     \]
 
-- **Graphical Display**: Visualizes real-time voltage data, FFT results, and adjacency matrix graphs using `ncurses`.
-- **Interactive Key Bindings**: Users can capture new packets, refresh data, or switch between views using keyboard shortcuts.
+- **Graphical Display**: Visualizes real-time voltage data, FFT results, and matrix operations using `ncurses`.
+- **Interactive Key Bindings**:
+  - **Press '1'**: Captures packets and provides a voltage view.
+  - **Press '2'**: Displays matrix multiplication results. This feature is still under construction and is not yet synchronized or fully tested.
 
 ### Usage Instructions
 
@@ -65,14 +67,7 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
 
 5. **View Analysis Results**:
 
-   The terminal-based UI displays real-time voltage sample values, FFT results, and any identified signal patterns.
-
-### Planned Enhancements
-
-- **Threading for Performance**: Implement multi-threaded packet handling for better performance and smoother UI updates.
-- **Advanced Signal Processing**: Add additional signal processing algorithms such as filtering and spectral analysis.
-- **Enhanced GUI Options**: Transition to a more advanced graphical toolkit (e.g., GTK or Qt) for enhanced visualization.
-- **Statistical Analysis**: Include chi-square and other statistical tests to validate signal properties and randomness.
+   The terminal-based UI displays real-time voltage sample values and matrix operations (in development).
 
 ### Prerequisites
 

@@ -33,7 +33,6 @@ int main() {
                     wrefresh(statuswin);
                     setup_main_view(windows);
                     perform_matrix_operations();
-                    // todo
                     break;
                 case '3':
                     // Handle Math View logic
