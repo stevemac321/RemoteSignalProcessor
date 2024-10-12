@@ -22,12 +22,16 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
     \[
     \text{Magnitude} = \sqrt{(\text{real}^2 + \text{imag}^2)}
     \]
-
 - **Graphical Display**: Visualizes real-time voltage data, FFT results, and matrix operations using `ncurses`.
+- **Matrix Operations**:
+  - Performs matrix addition, subtraction, and multiplication on captured packet data.
+  - The results are displayed in the terminal along with execution times.
+  - **New Feature**: Each matrix operation is validated against expected results, and the validation status (pass or fail) is displayed. Validation logs are saved to a file `matrix_validation.txt` after each run.
+  
 - **Interactive Key Bindings**:
   - **Press '1'**: Captures packets and provides a voltage view.
-  - **Press '2'**: Displays matrix multiplication results. This feature is still under construction and is not yet synchronized or fully tested.
-
+  - **Press '2'**: Displays matrix multiplication results, with validation status.
+  
 ### Usage Instructions
 
 1. **Install Dependencies**:
@@ -67,7 +71,9 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
 
 5. **View Analysis Results**:
 
-   The terminal-based UI displays real-time voltage sample values and matrix operations (in development).
+   The terminal-based UI displays real-time voltage sample values and matrix operations (addition, subtraction, multiplication). Each operation is validated, and the results are shown in the interface.
+
+   - Validation logs can be found in `matrix_validation.txt` after each run, which records the comparison between the computed results and the expected results.
 
 ### Prerequisites
 
@@ -81,6 +87,7 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
 ├── src/                   # Source files for parsing, data processing, and visualization
 ├── include/               # Header files for classes and utility functions
 ├── build/                 # Directory for build artifacts
+├── matrix_validation.txt  # Log file containing matrix validation results
 ├── Makefile               # Makefile for building the project
 └── README.md              # Project overview and instructions
 ```

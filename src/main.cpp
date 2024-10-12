@@ -31,7 +31,7 @@ int main() {
                     // Handle Math View logic
                     mvwprintw(statuswin, 0, 200, "Math Usage");
                     wrefresh(statuswin);
-                    setup_main_view(windows);
+                    setup_math_view(windows);
                     perform_matrix_operations();
                     break;
                 case '3':
