@@ -31,14 +31,8 @@ int main() {
                     // Handle Math View logic
                     mvwprintw(statuswin, 0, 200, "Math Usage");
                     wrefresh(statuswin);
-<<<<<<< HEAD
                     setup_main_view(windows);
                     perform_matrix_operations();
-=======
-                    //setup_main_view(windows);
-                    //perform_matrix_operations();
-                    // todo
->>>>>>> b8f0303d376b91db7b77cc4e69f0ca52b5c82c88
                     break;
                 case '3':
                     // Handle Math View logic
