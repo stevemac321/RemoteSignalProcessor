@@ -91,3 +91,5 @@ void setup_math_view(WINDOW* windows[]) {
 
 
 
+
+
