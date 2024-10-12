@@ -40,7 +40,7 @@ void initialize_screen();
 void draw_perimeter(WINDOW* win);
 void draw_function_keys(WINDOW* win);
 void setup_main_view(WINDOW* windows[]);
-void setup_math_view(WINDOW* windows[]);
+void setup_math_view(WINDOW* windows[], const char* titles[]);
 
 void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet);
 void get_packet() ;

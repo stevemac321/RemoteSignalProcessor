@@ -2,6 +2,13 @@
 
 WINDOW *windows[NUM_WINDOWS];
 
+const char* math_titles[] = {
+    "Packet Matrices",
+    "Matrix Addition",
+    "Matrix Subtraction",
+    "Matrix Multiplication"
+};
+
 int main() {
     
     WINDOW* mainwin = nullptr;
@@ -23,19 +30,22 @@ int main() {
             switch (ch) {
                 case '1':
                     // Handle System View logic (e.g., refreshing with new data)
+                    wclear(statuswin);
                     mvwprintw(statuswin, 0, 200, "Voltage View");
                     wrefresh(statuswin);
                     display_all_voltage_data();
                     break;
                 case '2':
                     // Handle Math View logic
+                    wclear(statuswin);
                     mvwprintw(statuswin, 0, 200, "Math Usage");
                     wrefresh(statuswin);
-                    setup_math_view(windows);
+                    setup_math_view(windows, math_titles);
                     perform_matrix_operations();
                     break;
                 case '3':
                     // Handle Math View logic
+                    wclear(statuswin);
                     mvwprintw(statuswin, 0, 200, "Future Usage");
                     wrefresh(statuswin);
                     //todo
