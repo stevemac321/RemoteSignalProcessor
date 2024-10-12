@@ -1,8 +1,8 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -Iinc -mavx2 # Add the include directory to the flags
+CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -Iinc  # Add the include directory to the flags
 LDFLAGS = -lncurses -pthread -lpcap
-
+#-mavx2
 # Target executable
 TARGET = remote_monitor
 
