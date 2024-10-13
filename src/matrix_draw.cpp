@@ -1,5 +1,5 @@
-#include "common.h"
-#include <inttypes.h> // For PRIi64
+#include "matrix.h"
+
 
 int spacing = 4;
 const int column_spacing = 50;

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "main.h"
 
 WINDOW *windows[NUM_WINDOWS];
 

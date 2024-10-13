@@ -1,5 +1,5 @@
 
-#include "common.h"
+#include "packet.h"
 
 // Conversion factor for 12-bit ADC with 3.3V reference voltage
 #define ADC_REF_VOLTAGE 3.3f

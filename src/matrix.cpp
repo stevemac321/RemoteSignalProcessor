@@ -1,11 +1,5 @@
 
-#include "common.h"
-
-#include <iostream>
-#include <fstream> // For file handling
-#include <iomanip> // For formatting
-#include <string>  // For std::string
-#include <cstring> // For std::memcpy
+#include "matrix.h"
 
 const size_t NUM_THREADS = std::thread::hardware_concurrency(); // Number of threads
 
@@ -15,7 +9,7 @@ int64_t addition_result[MATRIX_DIM][MATRIX_DIM];
 int64_t subtraction_result[MATRIX_DIM][MATRIX_DIM];
 int64_t multiplication_result[MATRIX_DIM][MATRIX_DIM];
 
-#include <chrono>
+extern uint8_t packet_array[];
 
 void perform_matrix_operations()
 {

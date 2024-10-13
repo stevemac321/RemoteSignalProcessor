@@ -1,5 +1,6 @@
-#include "common.h"
+#include "voltage.h"
 #include "graph.h"
+
 std::vector<std::complex<float>> save_fft(TOTAL_FLOATS);
 
 void display_voltage_floats(WINDOW * win)

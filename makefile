@@ -1,6 +1,8 @@
 # Compiler and flags
 CXX = clang++
-CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -Iinc  # Add the include directory to the flags
+CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -Iinc 
+CXXFLAGS += -DCOLUMNS=251 -DROWS=65 -DTOTAL_FLOATS=32 -DPACKET_LENGTH=128 -DNUM_WINDOWS=4 -DNUM_MATRICES=2 -DMATRIX_DIM=8
+
 LDFLAGS = -lncurses -pthread -lpcap
 #-mavx2
 # Target executable

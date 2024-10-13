@@ -1,4 +1,4 @@
-#include "common.h"
+#include "more_math.h"
 /*
 # Fourier Series Formula:
 The general form of a Fourier series is:
