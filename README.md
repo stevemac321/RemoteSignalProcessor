@@ -57,7 +57,7 @@ The Voltage Analyzer interfaces directly with a microcontroller over Ethernet, c
    ```bash
    sudo apt-get update
    sudo apt-get install libncurses5-dev libpcap-dev
-   sudo apt-get install gdb-multiarch openocd stlink-tools
+   sudo apt-get install libpcap-dev
 
 Clone the Repository:
 
