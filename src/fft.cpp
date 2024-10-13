@@ -22,7 +22,6 @@ std::complex<float> complex_subtract(std::complex<float> a, std::complex<float> 
 }
 
 // Recursive FFT function
-// Recursive FFT function
 void FFT(std::vector<std::complex<float>> &x, const size_t size) {
     if (size <= 1) return;
 

@@ -2,11 +2,18 @@
 
 WINDOW *windows[NUM_WINDOWS];
 
-const char* math_titles[] = {
+const char* matrix_titles[] = {
     "Packet Matrices",
     "Matrix Addition",
     "Matrix Subtraction",
     "Matrix Multiplication"
+};
+
+const char* math_titles[] = {
+    "FFT Series",
+    "Polynomial Multiplication",
+    "TBD",
+    "TBD"
 };
 
 int main() {
@@ -33,22 +40,25 @@ int main() {
                     wclear(statuswin);
                     mvwprintw(statuswin, 0, 200, "Voltage View");
                     wrefresh(statuswin);
+                    setup_main_view(windows);
                     display_all_voltage_data();
                     break;
                 case '2':
                     // Handle Math View logic
                     wclear(statuswin);
-                    mvwprintw(statuswin, 0, 200, "Math Usage");
+                    mvwprintw(statuswin, 0, 200, "Matrix View");
                     wrefresh(statuswin);
-                    setup_math_view(windows, math_titles);
+                    setup_math_view(windows, matrix_titles);
                     perform_matrix_operations();
                     break;
                 case '3':
                     // Handle Math View logic
                     wclear(statuswin);
-                    mvwprintw(statuswin, 0, 200, "Future Usage");
+                    mvwprintw(statuswin, 0, 200, "More Math");
                     wrefresh(statuswin);
-                    //todo
+                    setup_math_view(windows, math_titles);
+                    draw_function_keys(statuswin);
+                    more_math();
                     break;
                 default:
                     mvwprintw(statuswin, 0, 200, "Unknown Key Pressed");

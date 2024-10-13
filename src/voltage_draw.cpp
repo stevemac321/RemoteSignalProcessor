@@ -1,5 +1,6 @@
 #include "common.h"
 #include "graph.h"
+std::vector<std::complex<float>> save_fft(TOTAL_FLOATS);
 
 void display_voltage_floats(WINDOW * win)
 {
@@ -65,7 +66,7 @@ void display_all_voltage_data()
     display_voltage_floats(windows[1]);
     display_voltage_packet(windows[0]);
     v = prepare_complex_fft(float_array, TOTAL_FLOATS);
-    auto save_fft = v;
+    save_fft = v;
     normalize_signal(v);
     FFT(v, TOTAL_FLOATS);
     display_voltage_fft(windows[2], v);

@@ -27,6 +27,7 @@ const int MATRIX_DIM = 8;
 extern float float_array[];  
 extern uint8_t packet_array[];
 extern bool packet_captured;
+extern std::vector<std::complex<float>> save_fft;
 
 extern int64_t packet_matrix1[MATRIX_DIM][MATRIX_DIM];
 extern int64_t packet_matrix2[MATRIX_DIM][MATRIX_DIM];
@@ -54,6 +55,7 @@ void display_voltage_packet(WINDOW * win);
 void display_voltage_fft(WINDOW * win, std::vector<std::complex<float>> &v);
 void display_voltage_graph(WINDOW* win, const std::vector<std::complex<float>>& complex_data,
     const std::vector<float> magnitudes);
+void display_voltage_graph(WINDOW* win, const float voltage_data[], size_t data_size);
 
     // FFT
 std::complex<float> complex_multiply(std::complex<float> a, std::complex<float> b);
@@ -99,4 +101,17 @@ void log_matrix(int64_t result[MATRIX_DIM][MATRIX_DIM], const std::string& filen
 void display_all_matrix_data(std::chrono::microseconds addition_duration, 
                              std::chrono::microseconds subtraction_duration,
                              std::chrono::microseconds multiplication_duration);
+
+// more math
+void more_math();
+std::vector<float> fourier_series_approximation(const std::vector<std::complex<float>>& fft_data, 
+                                                    size_t harmonics_count, size_t signal_length);
+void display_fourier_approximation(WINDOW* win, const std::vector<float>& reconstructed_signal);
+// Function to multiply two sets of FFT results directly
+std::vector<std::complex<float>> polynomial_multiply_fft(const std::vector<std::complex<float>>& fft1, const std::vector<std::complex<float>>& fft2);
+
+// Display the polynomial multiplication result in an ncurses window
+void display_polynomial_multiplication_result(WINDOW* win, const std::vector<std::complex<float>>& result);
+void polynomial_multiplication_using_save_fft();
+
 #endif // COMMON_H
