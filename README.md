@@ -1,5 +1,5 @@
 # Voltage Analyzer
-
+(pair this client-host native Linux application with the EmbeddedEthernet project: https://github.com/stevemac321/EmbeddedEthernet).
 This repository hosts a terminal-based application built using `ncurses` that processes and analyzes voltage samples transmitted over Ethernet. The application captures real-time Ethernet packets from a microcontroller, parses the data, and performs various analyses, including signal processing techniques such as Fast Fourier Transform (FFT), matrix operations, and statistical analysis.
 
 ## Project Overview
